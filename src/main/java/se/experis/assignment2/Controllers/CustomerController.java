@@ -4,6 +4,7 @@ import se.experis.assignment2.Models.Customer;
 import se.experis.assignment2.Models.CustomerCountry;
 import se.experis.assignment2.Models.CustomerRepository;
 import org.springframework.web.bind.annotation.*;
+import se.experis.assignment2.Models.CustomerSpender;
 
 import java.util.ArrayList;
 
@@ -52,6 +53,10 @@ public class CustomerController {
     @RequestMapping(value = "query7", method = RequestMethod.GET)
     public ArrayList<CustomerCountry> getCustomersPerCountryController() {
         return customerRepository.getCustomersPerCountry();
+    }
+    @RequestMapping(value = "query8", method = RequestMethod.GET)
+    public ArrayList<CustomerSpender> getHighestCustomersSpendersController() {
+        return customerRepository.getHighestCustomerSpenders();
     }
 
     @GetMapping("/hello")

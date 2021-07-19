@@ -293,5 +293,48 @@ public class CustomerRepository {
         }
         return customerCountries;
     }
+    public ArrayList<CustomerSpender> getHighestCustomerSpenders() {
+        ArrayList<CustomerSpender> customerSpenders = new ArrayList<>();
 
+        try {
+            conn = DriverManager.getConnection(URL);
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "SELECT Customer.CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email, Sum(Total) " +
+                    "as TotalPurchases " +
+                    "from Customer " +
+                    "JOIN Invoice I on Customer.CustomerId = I.CustomerId " +
+                    "GROUP BY Customer.CustomerId " +
+                    "ORDER BY TotalPurchases " +
+                    "DESC;");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                CustomerSpender customerSpender = new CustomerSpender(
+                        resultSet.getInt("CustomerId"),
+                        resultSet.getString("FirstName"),
+                        resultSet.getString("LastName"),
+                        resultSet.getString("Country"),
+                        resultSet.getString("PostalCode"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Email"),
+                        resultSet.getDouble("TotalPurchases"));
+
+
+                customerSpenders.add(customerSpender);
+            }
+        } catch (Exception ex) {
+            System.out.println("Something went wrong...");
+            System.out.println(ex.toString());
+        }
+        finally {
+            try {
+                conn.close();
+            } catch (Exception ex) {
+                System.out.println("Something went wrong while closing the connection");
+                System.out.println(ex.toString());
+            }
+        }
+        return customerSpenders;
+    }
 }
