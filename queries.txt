@@ -1,0 +1,5 @@
+Query1 = localhost:8080/query1
+Query2 = localhost:8080/query2?Id=5
+Query3 = localhost:8080/query3?name=pu
+Query4 = localhost:8080/query4?limit=10&offset=5
+Query5 = postman
