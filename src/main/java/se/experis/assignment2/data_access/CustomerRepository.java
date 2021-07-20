@@ -1,4 +1,9 @@
-package se.experis.assignment2.Models;
+package se.experis.assignment2.data_access;
+
+import se.experis.assignment2.models.Customer;
+import se.experis.assignment2.models.CustomerCountry;
+import se.experis.assignment2.models.CustomerGenre;
+import se.experis.assignment2.models.CustomerSpender;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -268,7 +273,7 @@ public class CustomerRepository {
 
         try {
             conn = DriverManager.getConnection(URL);
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT Country, COUNT(Country) AS Number_of_Customers FROM Customer GROUP BY Country;");
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT Country, COUNT(Country) AS Number_of_Customers FROM Customer GROUP BY Country ORDER BY COUNT(Country) DESC;");
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -336,5 +341,66 @@ public class CustomerRepository {
             }
         }
         return customerSpenders;
+    }
+
+    /**
+     * Query 9
+     * @return : ArrayList
+     */
+    public ArrayList<CustomerGenre> getPopularGenreByCustomer(int id) {
+        ArrayList<CustomerGenre> customerGenres = new ArrayList<>();
+
+        try {
+            conn = DriverManager.getConnection(URL);
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "SELECT Customer.CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email, G.Name " +
+                    "FROM Customer " +
+                    "JOIN Invoice I on Customer.CustomerId = I.CustomerId " +
+                    "JOIN InvoiceLine IL on I.InvoiceId = IL.InvoiceId " +
+                    "JOIN Track T on T.TrackId = IL.TrackId " +
+                    "JOIN Genre G on G.GenreId = T.GenreId " +
+                    "GROUP BY G.GenreId, Customer.CustomerId " +
+                    "HAVING I.CustomerId = ? " +
+                        "AND Count(G.GenreId) = ( " +
+                            "SELECT MAX(A.CNT) " +
+                            "FROM (SELECT COUNT(G.GenreId) AS CNT " +
+                            "FROM Customer " +
+                            "JOIN Invoice I on Customer.CustomerId = I.CustomerId " +
+                            "JOIN InvoiceLine IL on I.InvoiceId = IL.InvoiceId " +
+                            "JOIN Track T on T.TrackId = IL.TrackId " +
+                            "JOIN Genre G on G.GenreId = T.GenreId " +
+                            "WHERE Customer.CustomerId = ? " +
+                            "GROUP BY G.GenreId, Customer.CustomerId) AS A) ");
+            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(2, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                CustomerGenre customerGenre = new CustomerGenre(
+                        resultSet.getInt("CustomerId"),
+                        resultSet.getString("FirstName"),
+                        resultSet.getString("LastName"),
+                        resultSet.getString("Country"),
+                        resultSet.getString("PostalCode"),
+                        resultSet.getString("Phone"),
+                        resultSet.getString("Email"),
+                        resultSet.getString("Name"));  //Name?
+
+                customerGenres.add(customerGenre);
+            }
+        } catch (Exception ex) {
+            System.out.println("Something went wrong...");
+            System.out.println(ex.toString());
+        }
+        finally {
+            try {
+                conn.close();
+            } catch (Exception ex) {
+                System.out.println("Something went wrong while closing the connection");
+                System.out.println(ex.toString());
+            }
+        }
+        return customerGenres;
     }
 }

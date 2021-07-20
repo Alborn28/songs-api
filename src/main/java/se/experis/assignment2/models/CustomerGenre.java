@@ -1,35 +1,35 @@
-package se.experis.assignment2.Models;
+package se.experis.assignment2.models;
 
-public class CustomerSpender {
-    private int id;
+public class CustomerGenre {
+    private int customerId;
     private String firstName;
     private String lastName;
     private String country;
     private String postalCode;
     private String phoneNumber;
     private String mail;
-    private double totalPurchases;
+    private String genreName;
 
-    public CustomerSpender() {
+    public CustomerGenre() {
     }
 
-    public CustomerSpender(int id, String firstName, String lastName, String country, String postalCode, String phoneNumber, String mail, double totalPurchases) {
-        this.id = id;
+    public CustomerGenre(int customerId, String firstName, String lastName, String country, String postalCode, String phoneNumber, String mail, String genreName) {
+        this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.country = country;
         this.postalCode = postalCode;
         this.phoneNumber = phoneNumber;
         this.mail = mail;
-        this.totalPurchases = totalPurchases;
+        this.genreName = genreName;
     }
 
-    public int getId() {
-        return id;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getFirstName() {
@@ -80,11 +80,11 @@ public class CustomerSpender {
         this.mail = mail;
     }
 
-    public double getTotalPurchases() {
-        return totalPurchases;
+    public String getGenreName() {
+        return genreName;
     }
 
-    public void setTotalPurchases(double totalPurchases) {
-        this.totalPurchases = totalPurchases;
+    public void setGenreName(String genreName) {
+        this.genreName = genreName;
     }
 }

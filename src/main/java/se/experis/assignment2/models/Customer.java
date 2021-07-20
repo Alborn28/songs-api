@@ -1,4 +1,4 @@
-package se.experis.assignment2.Models;
+package se.experis.assignment2.models;
 
 public class Customer {
     private int id;
