@@ -65,23 +65,4 @@ public class CustomerController {
     public ArrayList<CustomerGenre> getPopularGenreByCustomer(@PathVariable int id) {
         return customerRepository.getPopularGenreByCustomer(id);
     }
-
-    @GetMapping("/hello")
-    public String greetGuest() {
-        return "Hello, guest!";
-    }
-
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String simpleSearch(@RequestParam("query") String terms) {
-        return "Search results for " + terms;
-    }
-
-    @RequestMapping(value = "/{resource_type}/{resource_name}", method = RequestMethod.GET)
-    public String simpleSearch(
-            @PathVariable String resource_type, // pokemon
-            @PathVariable String resource_name  // pikachu
-    )
-    {
-        return "Data for " + resource_type + " with name " + resource_name;
-    }
 }
