@@ -10,10 +10,10 @@ public class Track {
         this.name = name;
     }
 
-    public Track(String name, String artist, String album, String genre) {
+    public Track(String name, String album, String artist, String genre) {
         this.name = name;
-        this.artist = artist;
         this.album = album;
+        this.artist = artist;
         this.genre = genre;
     }
 
