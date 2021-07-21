@@ -8,14 +8,20 @@ import se.experis.assignment2.models.CustomerSpender;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Data access class for API requests
+ */
 public class CustomerRepository {
     private String URL = ConnectionHelper.CONNECTION_URL;
     private Connection conn = null;
     private ArrayList<Customer> list = new ArrayList<>();
 
+    /**
+     * Retrieve all the Customers in database.
+     * @return : ArrayList
+     */
     public ArrayList<Customer> getAllCustomers() {
         list.clear();
-
         try {
             conn = DriverManager.getConnection(URL);
             PreparedStatement preparedStatement = conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email from Customer");
@@ -49,6 +55,11 @@ public class CustomerRepository {
         return list;
     }
 
+    /**
+     * Retrieves the Customer which matches a given ID.
+     * @param Id : String
+     * @return : Customer
+     */
     public Customer getSpecificCustomer(String Id) {
         try {
             Connection conn = DriverManager.getConnection(URL);
@@ -83,6 +94,11 @@ public class CustomerRepository {
         return null;
     }
 
+    /**
+     * Retrieves all Customers who's name matches a given search term.
+     * @param name : String
+     * @return : ArrayList
+     */
     public ArrayList<Customer> getCustomerByName(String name) {
         list.clear();
 
@@ -120,6 +136,12 @@ public class CustomerRepository {
         return list;
     }
 
+    /**
+     * Retrieves a page of Customers based on a given limit and offset.
+     * @param limit : Integer
+     * @param offset : Integer
+     * @return : ArrayList
+     */
     public ArrayList<Customer> getSubsetOfCustomers(int limit, int offset) {
         list.clear();
 
@@ -158,13 +180,16 @@ public class CustomerRepository {
         return list;
     }
 
+    /**
+     * Adds a Customer to the database with a POST method.
+     * @param customer : Customer
+     * @return : boolean
+     */
     public Boolean addCustomer(Customer customer) {
         boolean success = false;
         try{
-            // Connect to DB
             conn = DriverManager.getConnection(URL);
 
-            // Make SQL query
             PreparedStatement preparedStatement =
                     conn.prepareStatement("INSERT INTO customer(CustomerId,FirstName,LastName,Country,PostalCode,Phone,Email) VALUES(?,?,?,?,?,?,?)");
             preparedStatement.setInt(1, customer.getId());
@@ -175,7 +200,6 @@ public class CustomerRepository {
             preparedStatement.setString(6,customer.getPhoneNumber());
             preparedStatement.setString(7,customer.getMail());
 
-            // Execute Query
             preparedStatement.executeUpdate();
             success = true;
         }
@@ -195,13 +219,16 @@ public class CustomerRepository {
         return success;
     }
 
+    /**
+     * Update an existing Customer in the database, based on a given id.
+     * @param customer : Customer
+     * @return : boolean
+     */
     public Boolean updateCustomer(Customer customer) {
         boolean success = false;
         try{
-            // Connect to DB
             conn = DriverManager.getConnection(URL);
 
-            // Make SQL query
             PreparedStatement preparedStatement =
                     conn.prepareStatement("update Customer set FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? where CustomerId = ?");
             preparedStatement.setString(1,customer.getFirstName());
@@ -212,7 +239,6 @@ public class CustomerRepository {
             preparedStatement.setString(6,customer.getMail());
             preparedStatement.setInt(7,customer.getId());
 
-            // Execute Query
             preparedStatement.executeUpdate();
             success = true;
         }
@@ -232,42 +258,10 @@ public class CustomerRepository {
         return success;
     }
 
-    public ArrayList<Customer> getSubsetOfCustomers() {
-        list.clear();
-
-        try {
-            conn = DriverManager.getConnection(URL);
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email from Customer group by country order by country desc");
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Customer customer = new Customer(
-                        resultSet.getInt("CustomerId"),
-                        resultSet.getString("FirstName"),
-                        resultSet.getString("LastName"),
-                        resultSet.getString("Country"),
-                        resultSet.getString("PostalCode"),
-                        resultSet.getString("Phone"),
-                        resultSet.getString("Email"));
-
-                list.add(customer);
-            }
-        } catch (Exception ex) {
-            System.out.println("Something went wrong...");
-            System.out.println(ex.toString());
-        }
-        finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
-        }
-        return list;
-    }
-
+    /**
+     * Returns a List with the number of Customers for each country
+     * @return : ArrayList
+     */
     public ArrayList<CustomerCountry> getCustomersPerCountry() {
         ArrayList<CustomerCountry> customerCountries = new ArrayList<>();
 
@@ -298,6 +292,11 @@ public class CustomerRepository {
         }
         return customerCountries;
     }
+
+    /**
+     * Retrieves a List of Customers sorted based on their spending, from descending order.
+     * @return : ArrayList
+     */
     public ArrayList<CustomerSpender> getHighestCustomerSpenders() {
         ArrayList<CustomerSpender> customerSpenders = new ArrayList<>();
 
@@ -325,7 +324,6 @@ public class CustomerRepository {
                         resultSet.getString("Email"),
                         resultSet.getDouble("TotalPurchases"));
 
-
                 customerSpenders.add(customerSpender);
             }
         } catch (Exception ex) {
@@ -344,11 +342,12 @@ public class CustomerRepository {
     }
 
     /**
-     * Query 9
+     * Retrieves a Customer's most popular genre based on their purchases.
+     * @param id : Integer
      * @return : ArrayList
      */
-    public ArrayList<CustomerGenre> getPopularGenreByCustomer(int id) {
-        ArrayList<CustomerGenre> customerGenres = new ArrayList<>();
+    public CustomerGenre getPopularGenreByCustomer(int id) {
+        CustomerGenre customerGenre = null;
 
         try {
             conn = DriverManager.getConnection(URL);
@@ -376,8 +375,11 @@ public class CustomerRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            ArrayList<String> genres = new ArrayList<>();
             while (resultSet.next()) {
-                CustomerGenre customerGenre = new CustomerGenre(
+                genres.add(resultSet.getString("Name"));
+
+                customerGenre = new CustomerGenre(
                         resultSet.getInt("CustomerId"),
                         resultSet.getString("FirstName"),
                         resultSet.getString("LastName"),
@@ -385,9 +387,7 @@ public class CustomerRepository {
                         resultSet.getString("PostalCode"),
                         resultSet.getString("Phone"),
                         resultSet.getString("Email"),
-                        resultSet.getString("Name"));  //Name?
-
-                customerGenres.add(customerGenre);
+                        genres);
             }
         } catch (Exception ex) {
             System.out.println("Something went wrong...");
@@ -401,6 +401,6 @@ public class CustomerRepository {
                 System.out.println(ex.toString());
             }
         }
-        return customerGenres;
+        return customerGenre;
     }
 }

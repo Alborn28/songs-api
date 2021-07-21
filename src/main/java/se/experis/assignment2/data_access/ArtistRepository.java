@@ -1,7 +1,6 @@
 package se.experis.assignment2.data_access;
 
 import se.experis.assignment2.models.Artist;
-import se.experis.assignment2.models.Customer;
 import se.experis.assignment2.models.Genre;
 import se.experis.assignment2.models.Track;
 
@@ -10,110 +9,92 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Random;
 
-public class ThymeleafRepository {
+/**
+ * Data access class related to the Thymeleaf views for this project
+ */
+public class ArtistRepository {
     private String URL = ConnectionHelper.CONNECTION_URL;
     private Connection conn = null;
 
+    /**
+     * Private method which takes in a query, performs the query and returns a list of the result.
+     * @param query : String
+     * @return : ArrayList
+     */
+    private ArrayList<String> get5Random(String query) {
+        ArrayList<String> names = new ArrayList<>();
+        try {
+            conn = DriverManager.getConnection(URL);
 
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                names.add(resultSet.getString("Name"));
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Something went wrong...");
+            System.out.println(ex.toString());
+        }
+        finally {
+            try {
+                conn.close();
+            } catch (Exception ex) {
+                System.out.println("Something went wrong while closing the connection");
+                System.out.println(ex.toString());
+            }
+        }
+
+        return names;
+    }
+
+    /**
+     * Method used to extract five random artists from the database.
+     * @return : ArrayList
+     */
     public ArrayList<Artist> getFiveRandomArtists() {
         ArrayList<Artist> list = new ArrayList<>();
-        Random random = new Random();
-
-        try {
-            conn = DriverManager.getConnection(URL);
-
-            for (int i = 0; i < 5; i++) {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT Name FROM Artist WHERE ArtistId = ?");
-
-                preparedStatement.setInt(1, random.nextInt(275) + 1);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                while (resultSet.next()) {
-                    list.add(new Artist(resultSet.getString("Name")));
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println("Something went wrong...");
-            System.out.println(ex.toString());
-        }
-        finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+        ArrayList<String> names = get5Random("SELECT Name FROM Artist ORDER BY random() LIMIT 5;");
+        for (String name : names) {
+            list.add(new Artist(name));
         }
         return list;
     }
+
+    /**
+     * Method used to extract five random tracks from the database.
+     * @return : ArrayList
+     */
     public ArrayList<Track> getFiveRandomTracks() {
         ArrayList<Track> list = new ArrayList<>();
-        Random random = new Random();
-
-        try {
-            conn = DriverManager.getConnection(URL);
-
-            for (int i = 0; i < 5; i++) {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT Name FROM Track WHERE TrackId = ?");
-
-                preparedStatement.setInt(1, random.nextInt(3503) + 1);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                while (resultSet.next()) {
-                    list.add(new Track(resultSet.getString("Name")));
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println("Something went wrong...");
-            System.out.println(ex.toString());
-        }
-        finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+        ArrayList<String> names = get5Random("SELECT Name FROM Track ORDER BY random() LIMIT 5");
+        for (String name : names) {
+            list.add(new Track(name));
         }
         return list;
     }
+
+    /**
+     * Method used to extract five random genres from the database.
+     * @return : ArrayList
+     */
     public ArrayList<Genre> getFiveRandomGenres() {
         ArrayList<Genre> list = new ArrayList<>();
-        Random random = new Random();
-
-        try {
-            conn = DriverManager.getConnection(URL);
-
-            for (int i = 0; i < 5; i++) {
-                PreparedStatement preparedStatement = conn.prepareStatement("SELECT Name FROM Genre WHERE GenreId = ?");
-
-                preparedStatement.setInt(1, random.nextInt(25) + 1);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                while (resultSet.next()) {
-                    list.add(new Genre(resultSet.getString("Name")));
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println("Something went wrong...");
-            System.out.println(ex.toString());
-        }
-        finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+        ArrayList<String> names = get5Random("SELECT Name FROM Genre ORDER BY random() LIMIT 5");
+        for (String name : names) {
+            list.add(new Genre(name));
         }
         return list;
     }
 
+    /**
+     * Method for extracting tracks based which matches a search term from the Thymeleaf view.
+     * @param searchterm : String
+     * @return : ArrayList
+     */
     public ArrayList<Track> searchForTrack(String searchterm) {
         ArrayList<Track> list = new ArrayList<>();
 

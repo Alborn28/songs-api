@@ -1,5 +1,7 @@
 package se.experis.assignment2.models;
 
+import java.util.ArrayList;
+
 public class CustomerGenre {
     private int customerId;
     private String firstName;
@@ -8,12 +10,12 @@ public class CustomerGenre {
     private String postalCode;
     private String phoneNumber;
     private String mail;
-    private String genreName;
+    private ArrayList<String> genreName;
 
     public CustomerGenre() {
     }
 
-    public CustomerGenre(int customerId, String firstName, String lastName, String country, String postalCode, String phoneNumber, String mail, String genreName) {
+    public CustomerGenre(int customerId, String firstName, String lastName, String country, String postalCode, String phoneNumber, String mail, ArrayList<String> genreName) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -80,11 +82,11 @@ public class CustomerGenre {
         this.mail = mail;
     }
 
-    public String getGenreName() {
+    public ArrayList<String> getGenreName() {
         return genreName;
     }
 
-    public void setGenreName(String genreName) {
+    public void setGenreName(ArrayList<String> genreName) {
         this.genreName = genreName;
     }
 }

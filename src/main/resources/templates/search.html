@@ -12,7 +12,7 @@
     <div class="container">
         <div class="card border-dark bg-light mb-3" style="width: 18rem;">
             <div class="card-body text-dark">
-                <h5 class="card-title">Search result</h5>
+                <h5 th:text="'Search result for: '+ ${Query}" class="card-title">Search result for</h5>
                 <tr th:each="track: ${searchresults}">
                     <div>
                         <b>Track name:</b>
