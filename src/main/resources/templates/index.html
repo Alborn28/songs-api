@@ -10,7 +10,7 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-    <div class="container">
+    <div id="containerCss" class="container">
         <div class="row">
             <div class="card-group">
                 <div class="card border-dark bg-light mb-3" style="width: 18rem;">
@@ -18,7 +18,7 @@
                     <div class="card-body text-dark">
                         <h5 class="card-title">Five random artists</h5>
                         <div th:each="artist: ${artists}">
-                            <div th:text="${artist.getName()}"></div>
+                            <div class="test" th:text="${artist.getName()}"></div>
                         </div>
                     </div>
                 </div>
@@ -51,10 +51,11 @@
                 <form class="form-inline" action="#" th:action="@{/search}" method="get">
                     <input value="Bark at the moon" id = "searchId" required name="searchterm" type="Search" class="form-control rounded" placeholder="Enter a track name " aria-label="Search"
                            aria-describedby="search-addon" />
-                    <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">search</button>
+                    <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">Search</button>
                 </form>
             </div>
         </div>
     </div>
+
 </body>
 </html>
