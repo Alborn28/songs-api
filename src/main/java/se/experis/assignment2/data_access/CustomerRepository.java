@@ -45,12 +45,7 @@ public class CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return list;
     }
@@ -68,28 +63,23 @@ public class CustomerRepository {
             preparedStatement.setString(1, Id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                Customer customer = new Customer(
-                        resultSet.getInt("CustomerId"),
-                        resultSet.getString("FirstName"),
-                        resultSet.getString("LastName"),
-                        resultSet.getString("Country"),
-                        resultSet.getString("PostalCode"),
-                        resultSet.getString("Phone"),
-                        resultSet.getString("Email"));
-                return customer;
-            }
+            resultSet.next();
+            Customer customer = new Customer(
+                    resultSet.getInt("CustomerId"),
+                    resultSet.getString("FirstName"),
+                    resultSet.getString("LastName"),
+                    resultSet.getString("Country"),
+                    resultSet.getString("PostalCode"),
+                    resultSet.getString("Phone"),
+                    resultSet.getString("Email"));
+            return customer;
+
         } catch (Exception ex) {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return null;
     }
@@ -126,12 +116,7 @@ public class CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return list;
     }
@@ -170,12 +155,7 @@ public class CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return list;
     }
@@ -208,13 +188,7 @@ public class CustomerRepository {
             System.out.println(exception.toString());
         }
         finally {
-            try {
-                conn.close();
-            }
-            catch (Exception exception){
-                System.out.println("Something went wrong when closing the connection");
-                System.out.println(exception.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return success;
     }
@@ -247,13 +221,7 @@ public class CustomerRepository {
             System.out.println(exception.toString());
         }
         finally {
-            try {
-                conn.close();
-            }
-            catch (Exception exception){
-                System.out.println("Something went wrong when closing the connection");
-                System.out.println(exception.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return success;
     }
@@ -283,12 +251,7 @@ public class CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return customerCountries;
     }
@@ -331,12 +294,7 @@ public class CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return customerSpenders;
     }
@@ -394,12 +352,7 @@ public class CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
         return customerGenre;
     }

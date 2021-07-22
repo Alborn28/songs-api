@@ -11,11 +11,50 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 /**
- * Data access class related to the Thymeleaf views for this project
+ * Data access class for extracting information about artists, tracks and genres from the database
  */
 public class ArtistRepository {
     private String URL = ConnectionHelper.CONNECTION_URL;
     private Connection conn = null;
+
+    /**
+     * Method used to extract five random artists from the database.
+     * @return : ArrayList
+     */
+    public ArrayList<Artist> getFiveRandomArtists() {
+        ArrayList<Artist> list = new ArrayList<>();
+        ArrayList<String> names = this.get5Random("SELECT Name FROM Artist ORDER BY random() LIMIT 5;");
+        for (String name : names) {
+            list.add(new Artist(name));
+        }
+        return list;
+    }
+
+    /**
+     * Method used to extract five random tracks from the database.
+     * @return : ArrayList
+     */
+    public ArrayList<Track> getFiveRandomTracks() {
+        ArrayList<Track> list = new ArrayList<>();
+        ArrayList<String> names = this.get5Random("SELECT Name FROM Track ORDER BY random() LIMIT 5");
+        for (String name : names) {
+            list.add(new Track(name));
+        }
+        return list;
+    }
+
+    /**
+     * Method used to extract five random genres from the database.
+     * @return : ArrayList
+     */
+    public ArrayList<Genre> getFiveRandomGenres() {
+        ArrayList<Genre> list = new ArrayList<>();
+        ArrayList<String> names = this.get5Random("SELECT Name FROM Genre ORDER BY random() LIMIT 5");
+        for (String name : names) {
+            list.add(new Genre(name));
+        }
+        return list;
+    }
 
     /**
      * Private method which takes in a query, performs the query and returns a list of the result.
@@ -40,54 +79,10 @@ public class ArtistRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing the connection");
-                System.out.println(ex.toString());
-            }
+            ConnectionHelper.closeDatabaseConnection(conn);
         }
 
         return names;
-    }
-
-    /**
-     * Method used to extract five random artists from the database.
-     * @return : ArrayList
-     */
-    public ArrayList<Artist> getFiveRandomArtists() {
-        ArrayList<Artist> list = new ArrayList<>();
-        ArrayList<String> names = get5Random("SELECT Name FROM Artist ORDER BY random() LIMIT 5;");
-        for (String name : names) {
-            list.add(new Artist(name));
-        }
-        return list;
-    }
-
-    /**
-     * Method used to extract five random tracks from the database.
-     * @return : ArrayList
-     */
-    public ArrayList<Track> getFiveRandomTracks() {
-        ArrayList<Track> list = new ArrayList<>();
-        ArrayList<String> names = get5Random("SELECT Name FROM Track ORDER BY random() LIMIT 5");
-        for (String name : names) {
-            list.add(new Track(name));
-        }
-        return list;
-    }
-
-    /**
-     * Method used to extract five random genres from the database.
-     * @return : ArrayList
-     */
-    public ArrayList<Genre> getFiveRandomGenres() {
-        ArrayList<Genre> list = new ArrayList<>();
-        ArrayList<String> names = get5Random("SELECT Name FROM Genre ORDER BY random() LIMIT 5");
-        for (String name : names) {
-            list.add(new Genre(name));
-        }
-        return list;
     }
 
     /**
