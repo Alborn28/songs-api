@@ -94,8 +94,9 @@ public class CustomerRepository {
 
         try {
             conn = DriverManager.getConnection(URL);
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email from Customer where FirstName like ?");
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT CustomerId, FirstName, LastName, Country, PostalCode, Phone, Email from Customer where FirstName like ? or LastName like ?");
             preparedStatement.setString(1, "%" + name + "%");
+            preparedStatement.setString(2, "%" + name + "%");
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
