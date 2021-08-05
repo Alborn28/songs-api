@@ -2,7 +2,7 @@
 
 ## Task
 
-The task for this assignment was to create a Spring Boot Web API, and use Thymeleaf to create static HTML-pages and serve them to the browser. The database used was the following: [Chinook](https://www.sqlitetutorial.net/sqlite-sample-database). In the postman_collection.json there are nine calls to the API to test the functionality of the Endpoints. The task was to be completed by utilizing Pair Programming. The project was deployed using Docker on [Heroku](https://www.heroku.com).
+The task was to create a Spring Boot Web API, and use Thymeleaf to create static HTML-pages and serve them to the browser. The database used was the following: [Chinook](https://www.sqlitetutorial.net/sqlite-sample-database). In the postman_collection.json there are nine calls to the API to test the functionality of the Endpoints. The task was to be completed by utilizing Pair Programming. The project was deployed using Docker on [Heroku](https://www.heroku.com).
 
 ## Project Structure
 
